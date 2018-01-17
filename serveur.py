@@ -87,9 +87,11 @@ while serveur_lance:
                                 cl_to_send.link.send((cl.name + " : " + msg_recu).encode())
 
 print("Demarrage de la partie")
+game(pam, clients_connectes)
 for client in clients_connectes :
     print(client)
     client.link.send(b"Demarrage de la partie")
+    client.link.send(pam.nam.encode())
 
 win = False
 i = 0
