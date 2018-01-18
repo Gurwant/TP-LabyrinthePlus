@@ -69,7 +69,6 @@ while serveur_lance:
         for client in clients_a_lire:
             for cl in clients_connectes :
                 if client == cl.link:
-                    print(cl)
                     msg_recu = client.recv(1024).decode()
                     if cl.name == '' :
                         cl.name = msg_recu
@@ -77,10 +76,9 @@ while serveur_lance:
                         cl.robot = msg_recu[0]
                     elif msg_recu.lower() == 'c' :
                         if len(clients_connectes) >= 2 :
+                            joueurs_prets += 1
                             if joueurs_prets == len(clients_connectes) :
                                 serveur_lance = False
-                            else:
-                                joueurs_prets += 1
                         else :
                             client.send(b"Il n'y a pas assez de joueurs pour demarrer la partie")
                     else :
@@ -88,35 +86,23 @@ while serveur_lance:
                             if cl_to_send.link != client :
                                 cl_to_send.link.send((cl.name + " : " + msg_recu).encode())
 
-print("Demarrage de la partie")
+print("\nDemarrage de la partie\n")
 lab = Game(pam, clients_connectes)
-print(lab)
-print("game init")
+
 for client in clients_connectes :
     print(client)
     client.link.send(b"Demarrage de la partie")
-    client.link.send(pam.name.encode())
+    client.link.send(str(lab).encode())
 
 win = False
 i = 0
 while not win :
     joueur = clients_connectes[i % len(clients_connectes)]
     clients_a_lire = []
-    try:
-        clients_a_lire, wlist, xlist = select.select((c.link for c in clients_connectes),[], [], 0.05)
-    except select.error:
-        pass
-    else:
-        # On parcourt la liste des clients à lire
-        for client in clients_a_lire:
-            msg_recu = client.recv(1024).decode()
-            if msg_recu.lower.startswith("m:") :
-                for cl_to_send in clients_connectes:
-                    if cl_to_send.link != client :
-                        cl_to_send.link.send((cl.name + " : " + msg_recu).encode())
-            elif client == joueur.link :
-                win = labyrinthe.jouer(joueur,msg_recu)
-
+    joueur.link.send(b"play")
+    msg_recu = joueur.link.recv(1024).decode()
+    print(msg_recu)
+    i =+ 1
 
 
 for client in clients_connectes:
