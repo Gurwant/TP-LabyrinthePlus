@@ -50,9 +50,7 @@ class Pam :
         return pam
 
     def robot(self, chain):
+        """Recoit le symbole d'un robot suivi de ses coordonnées sous forme de chaine :'symbole,x,y'"""
         r , x , y = chain.split(",")
         self.robots[r] = (int(x),int(y))
 
-x = Pam("lol", 'Cartes\\Facile.txt')
-x.robot("v,5,5")
-print(x)

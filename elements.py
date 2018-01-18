@@ -13,18 +13,18 @@ class Element :
         return self.__repr()
 
 class Mur(Element):
-    """Classe représentant un mur"""
+    """Classe representant un mur"""
 
     symbole = 'O'
     solide = True
 
 class Porte(Element):
-    """Classe représentant un mur"""
+    """Classe representant un mur"""
 
     symbole = '.'
 
 class Sortie(Element):
-    """Classe représentant un mur"""
+    """Classe representant un mur"""
 
     symbole = 'X'
 

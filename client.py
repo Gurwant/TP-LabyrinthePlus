@@ -10,8 +10,8 @@ serveur = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 serveur.connect((hote, port))
 print("Connexion établie avec le serveur sur le port {}".format(port))
 print("Appuyer sur entrée pour recevoir des messages")
-msg_a_envoyer = ""
-while msg_a_envoyer != b"Demarrage de la partie":
+msg_recu = ""
+while msg_recu != b"Demarrage de la partie":
     try:
         a_lire, wlist, xlist = select.select([serveur],[], [], 0.05)
     except select.error:
