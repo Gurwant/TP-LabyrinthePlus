@@ -6,8 +6,6 @@ from pam import *
 from utilisateur import *
 from game import *
 
-
-
 def map_choice ():
     """ Menu du Jeu :
             -Affiche les cartes disponibles
@@ -49,15 +47,16 @@ serveur.listen(3)
 
 serveur_lance = True
 clients_connectes = []
+joueurs_prets = 0
 
+print("On attend les clients")
 #On ecoute les nouvelles connexions et les messages tant que deux clients au moins ne sont pas connectés et qu'un 'c' n'est pas msg_recu
 while serveur_lance:
     # On regarde si de nouveaux clients veulent se connecter et on les ajoutes à clients connectés
     connexions_demandees, wlist, xlist = select.select([serveur],[], [], 0.05)
     for connexion in connexions_demandees:
         connexion_avec_client, infos_connexion = connexion.accept()
-        connexion_avec_client.send(b"Veuillez entrer votre nom.")
-        clients_connectes.append(Utilisateur(connexion_avec_client, pam))
+        clients_connectes.append(Utilisateur(connexion_avec_client))
 
     # Maintenant, on écoute la liste des clients connectés
     clients_a_lire = []
@@ -70,16 +69,18 @@ while serveur_lance:
         for client in clients_a_lire:
             for cl in clients_connectes :
                 if client == cl.link:
+                    print(cl)
                     msg_recu = client.recv(1024).decode()
                     if cl.name == '' :
                         cl.name = msg_recu
-                        client.send(b"Veuillez entrer le symbole de votre robot")
                     elif cl.robot == '' :
                         cl.robot = msg_recu[0]
-                        client.send(("Il y a actuellement %i joueurs connectés" % len(clients_connectes)).encode())
                     elif msg_recu.lower() == 'c' :
                         if len(clients_connectes) >= 2 :
-                            serveur_lance = False
+                            if joueurs_prets == len(clients_connectes) :
+                                serveur_lance = False
+                            else:
+                                joueurs_prets += 1
                         else :
                             client.send(b"Il n'y a pas assez de joueurs pour demarrer la partie")
                     else :

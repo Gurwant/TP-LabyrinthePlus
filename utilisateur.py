@@ -10,7 +10,7 @@ class Utilisateur :
     name = ''
     robot = ''
 
-    def __init__(self, client, pam) :
+    def __init__(self, client) :
         self.link = client
 
     def __repr__(self):
